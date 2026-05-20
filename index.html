@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Personal productivity dashboard with timer, tasks, and quick links" />
+  <title>Life Dashboard — Ahmad Romadhon</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ===== HEADER / GREETING ===== -->
+  <header class="greeting-section">
+    <div class="container">
+      <div class="greeting-top">
+        <button id="themeBtn" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
+          <span class="theme-icon" aria-hidden="true">🌙</span>
+          <span class="theme-label">Dark Mode</span>
+        </button>
+      </div>
+
+      <div class="greeting-content">
+        <div id="clock" class="clock" aria-live="polite" aria-atomic="true">00:00:00</div>
+        <div id="date" class="date">Monday, 1 January 2026</div>
+
+        <!-- Challenge: Custom Name -->
+        <div class="greeting-name-wrap">
+          <h1 id="greetingText" class="greeting-text">Good Morning!</h1>
+          <div class="name-input-wrap" id="nameInputWrap">
+            <label for="nameInput" class="visually-hidden">Your name</label>
+            <input
+              type="text"
+              id="nameInput"
+              placeholder="Enter your name…"
+              maxlength="30"
+              aria-label="Your name"
+            />
+            <button id="saveNameBtn" class="btn btn-secondary">Save Name</button>
+          </div>
+          <button id="editNameBtn" class="btn btn-ghost btn-sm edit-name-btn" style="display:none">
+            <span aria-hidden="true">✏️</span> Edit Name
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main id="main-content" class="dashboard">
+    <div class="container">
+
+      <!-- ===== FOCUS TIMER ===== -->
+      <section class="card timer-card" aria-labelledby="timerHeading">
+        <h2 id="timerHeading"><span aria-hidden="true">⏱</span> Focus Timer</h2>
+        
+        <div class="timer-display-wrap">
+          <div id="timerDisplay" class="timer-display" role="timer" aria-live="off" aria-atomic="true">25:00</div>
+          <p class="timer-subtitle">Pomodoro Session</p>
+        </div>
+
+        <div class="timer-controls">
+          <button id="startBtn" class="btn btn-primary">
+            <span aria-hidden="true">▶</span> Start
+          </button>
+          <button id="pauseBtn" class="btn btn-secondary" disabled>
+            <span aria-hidden="true">⏸</span> Pause
+          </button>
+          <button id="resetBtn" class="btn btn-ghost">
+            <span aria-hidden="true">↺</span> Reset
+          </button>
+        </div>
+
+        <div class="timer-progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Timer progress">
+          <div id="timerProgress" class="timer-progress"></div>
+        </div>
+      </section>
+
+      <!-- ===== TO-DO LIST ===== -->
+      <section class="card todo-card" aria-labelledby="todoHeading">
+        <h2 id="todoHeading"><span aria-hidden="true">✅</span> To-Do List</h2>
+
+        <div class="todo-input-wrap">
+          <label for="todoInput" class="visually-hidden">New task</label>
+          <input
+            type="text"
+            id="todoInput"
+            placeholder="What needs to be done?"
+            maxlength="100"
+            aria-label="New task"
+            aria-describedby="todoError"
+          />
+          <button id="addTaskBtn" class="btn btn-primary" aria-label="Add task">
+            <span aria-hidden="true">+</span> Add
+          </button>
+        </div>
+        <p id="todoError" class="error-msg" role="alert" aria-live="polite"></p>
+
+        <ul id="todoList" class="todo-list" aria-label="Task list"></ul>
+
+        <div class="todo-footer">
+          <span id="taskCount" class="task-count" aria-live="polite">0 tasks</span>
+          <button id="clearDoneBtn" class="btn btn-ghost btn-sm">
+            <span aria-hidden="true">🗑</span> Clear Done
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== QUICK LINKS ===== -->
+      <section class="card links-card" aria-labelledby="linksHeading">
+        <h2 id="linksHeading"><span aria-hidden="true">🔗</span> Quick Links</h2>
+
+        <div class="links-input-wrap">
+          <label for="linkName" class="visually-hidden">Link name</label>
+          <input
+            type="text"
+            id="linkName"
+            placeholder="Name (e.g. GitHub)"
+            maxlength="30"
+            aria-label="Link name"
+          />
+          <label for="linkUrl" class="visually-hidden">Link URL</label>
+          <input
+            type="url"
+            id="linkUrl"
+            placeholder="URL (e.g. https://github.com)"
+            aria-label="Link URL"
+            aria-describedby="linkError"
+          />
+          <button id="addLinkBtn" class="btn btn-primary" aria-label="Add link">
+            <span aria-hidden="true">+</span> Add
+          </button>
+        </div>
+        <p id="linkError" class="error-msg" role="alert" aria-live="polite"></p>
+
+        <div id="linksList" class="links-grid" role="list" aria-label="Quick links"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Built with <span aria-label="love">❤️</span> by Ahmad Romadhon — Coding Camp Batch 18 May 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
