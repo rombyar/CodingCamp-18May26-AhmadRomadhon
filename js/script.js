@@ -1,22 +1,5 @@
-/* ============================================================
-   Life Dashboard — script.js
-   Ahmad Romadhon | Coding Camp Batch 18 May 2026
-
-   Features:
-   - Real-time clock & date
-   - Dynamic greeting
-   - Focus Timer (Pomodoro 25 min) with progress bar
-   - To-Do List (CRUD + Local Storage + Prevent Duplicate)
-   - Quick Links (Add/Delete + Local Storage)
-   - Light / Dark Mode (saved to Local Storage)
-   - Custom Name in Greeting (saved to Local Storage)
-   ============================================================ */
-
 'use strict';
 
-/* ============================================================
-   UTILITY
-   ============================================================ */
 const $ = (id) => document.getElementById(id);
 
 function saveLS(key, value) {
@@ -32,9 +15,6 @@ function loadLS(key, fallback) {
   }
 }
 
-/* ============================================================
-   1. GREETING — Clock, Date, Dynamic Greeting, Custom Name
-   ============================================================ */
 const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS = ['January','February','March','April','May','June',
                 'July','August','September','October','November','December'];
@@ -67,7 +47,6 @@ function updateClock() {
     : `${greeting}! 👋`;
 }
 
-// Custom Name
 function initName() {
   const saved = loadLS('userName', '');
   if (saved) {
@@ -91,7 +70,7 @@ $('nameInput').addEventListener('keydown', (e) => {
 
 $('editNameBtn').addEventListener('click', () => {
   $('nameInput').value             = loadLS('userName', '');
-  $('nameInputWrap').style.display = 'flex';
+  $('nameInputWrap').style.display = 'grid';
   $('editNameBtn').style.display   = 'none';
   $('nameInput').focus();
 });
@@ -100,15 +79,12 @@ initName();
 updateClock();
 setInterval(updateClock, 1000);
 
-/* ============================================================
-   2. LIGHT / DARK MODE
-   ============================================================ */
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   const btn = $('themeBtn');
   const icon = btn.querySelector('.theme-icon');
   const label = btn.querySelector('.theme-label');
-  
+
   if (theme === 'dark') {
     icon.textContent = '☀️';
     label.textContent = 'Light Mode';
@@ -129,9 +105,6 @@ $('themeBtn').addEventListener('click', () => {
   saveLS('theme', currentTheme);
 });
 
-/* ============================================================
-   3. FOCUS TIMER (Pomodoro)
-   ============================================================ */
 const TOTAL_SECONDS = 25 * 60;
 let timerSeconds  = TOTAL_SECONDS;
 let timerInterval = null;
@@ -148,10 +121,7 @@ function updateTimerUI() {
   const pct = ((TOTAL_SECONDS - timerSeconds) / TOTAL_SECONDS) * 100;
   const progressBar = $('timerProgress');
   progressBar.style.width = `${pct}%`;
-  
-  // Update progress bar aria attributes
-  const progressWrap = progressBar.parentElement;
-  progressWrap.setAttribute('aria-valuenow', Math.round(pct));
+  progressBar.parentElement.setAttribute('aria-valuenow', Math.round(pct));
 }
 
 function startTimer() {
@@ -159,8 +129,6 @@ function startTimer() {
   timerRunning = true;
   $('startBtn').disabled = true;
   $('pauseBtn').disabled = false;
-  
-  // Announce to screen readers
   $('timerDisplay').setAttribute('aria-live', 'polite');
 
   timerInterval = setInterval(() => {
@@ -203,9 +171,6 @@ $('resetBtn').addEventListener('click', resetTimer);
 
 updateTimerUI();
 
-/* ============================================================
-   4. TO-DO LIST
-   ============================================================ */
 let tasks = loadLS('tasks', []);
 
 function saveTasks() { saveLS('tasks', tasks); }
@@ -227,19 +192,16 @@ function renderTasks() {
     li.className = `todo-item${task.done ? ' done' : ''}`;
     li.dataset.index = index;
 
-    // Checkbox
     const cb = document.createElement('input');
     cb.type    = 'checkbox';
     cb.checked = task.done;
     cb.setAttribute('aria-label', `Mark "${task.text}" as done`);
     cb.addEventListener('change', () => toggleTask(index));
 
-    // Text span
     const span = document.createElement('span');
     span.className   = 'todo-text';
     span.textContent = task.text;
 
-    // Actions
     const actions = document.createElement('div');
     actions.className = 'todo-actions';
 
@@ -272,7 +234,6 @@ function addTask() {
     return;
   }
 
-  // Challenge: Prevent Duplicate Tasks
   const duplicate = tasks.some(
     t => t.text.toLowerCase() === text.toLowerCase()
   );
@@ -303,7 +264,6 @@ function deleteTask(index) {
 }
 
 function startEditTask(index, li, span) {
-  // Replace span with input
   const editInput = document.createElement('input');
   editInput.type      = 'text';
   editInput.className = 'todo-edit-input';
@@ -322,7 +282,6 @@ function startEditTask(index, li, span) {
       return;
     }
 
-    // Prevent duplicate on edit (exclude current task)
     const duplicate = tasks.some(
       (t, i) => i !== index && t.text.toLowerCase() === newText.toLowerCase()
     );
@@ -340,7 +299,7 @@ function startEditTask(index, li, span) {
 
   editInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter')  saveEdit();
-    if (e.key === 'Escape') renderTasks(); // cancel
+    if (e.key === 'Escape') renderTasks();
   });
   editInput.addEventListener('blur', saveEdit);
 }
@@ -357,16 +316,12 @@ $('todoInput').addEventListener('keydown', (e) => {
 });
 $('clearDoneBtn').addEventListener('click', clearDoneTasks);
 
-// Clear error on typing
 $('todoInput').addEventListener('input', () => {
   $('todoError').textContent = '';
 });
 
 renderTasks();
 
-/* ============================================================
-   5. QUICK LINKS
-   ============================================================ */
 let links = loadLS('quickLinks', [
   { name: 'GitHub',  url: 'https://github.com' },
   { name: 'Google',  url: 'https://google.com' },
@@ -409,7 +364,6 @@ function renderLinks() {
     nameSpan.textContent = link.name;
     a.appendChild(nameSpan);
 
-    // Delete button
     const delBtn = document.createElement('button');
     delBtn.className   = 'link-delete';
     delBtn.textContent = '✕';
@@ -435,7 +389,6 @@ function addLink() {
     return;
   }
 
-  // Basic URL validation
   let fullUrl = urlVal;
   if (!/^https?:\/\//i.test(fullUrl)) {
     fullUrl = 'https://' + fullUrl;
@@ -468,7 +421,6 @@ $('linkUrl').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') addLink();
 });
 
-// Clear error on typing
 [$('linkName'), $('linkUrl')].forEach(el => {
   el.addEventListener('input', () => { $('linkError').textContent = ''; });
 });
